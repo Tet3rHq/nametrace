@@ -57,7 +57,7 @@ function App() {
 
     try {
       const res = await axios.post<ApiResponse>(
-        "http://127.0.0.1:5000/api/check-username",
+        "https://nametrace-backend.onrender.com/api/check-username",
         { username: clean }
       );
       setData(res.data);
