@@ -84,11 +84,13 @@ def normalize_status(http_status: int | None, final_url: str, original_url: str)
         return ("uncertain", "low", "Platform redirected the request, so the result is not certain.")
 
     if http_status == 200:
-        if final_url.rstrip("/") == original_url.rstrip("/"):
-            return ("likely_exists", "medium", "Public profile URL responded successfully.")
-        if "login" in final_url.lower():
-            return ("uncertain", "low", "Request ended on a login-related page.")
-        return ("uncertain", "low", "Request succeeded but final destination was different.")
+    if "login" in final_url.lower():
+        return ("uncertain", "low", "Redirected to login page, cannot confirm profile.")
+    
+    if final_url.rstrip("/") != original_url.rstrip("/"):
+        return ("uncertain", "low", "URL redirected, result not fully reliable.")
+
+    return ("likely_exists", "medium", "Profile URL responded with 200 OK.")
 
     return ("uncertain", "low", f"Received HTTP {http_status}, result is not definitive.")
 
